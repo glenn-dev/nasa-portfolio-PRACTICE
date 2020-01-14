@@ -43,5 +43,25 @@ def buid_web_page (respuesta)           #metodo que toma la respuesta del metoso
     end
 end
 
+def photos_count (hash_res)             #metodo que cuenta las fotos de cada camara.
+    info = {}                           #
+    info_camera = []
+    hash_res['photos'].each do |i|
+        info = i
+        info_camera.push(info['camera'])
+    end
+    
+    acum = Hash.new(0)
+    info_camera.each do |v|
+        acum[v] += 1
+    end
+    acum.each do |k, v|
+        puts "Hay #{v} fotos de la camara #{k['name']}"
+    end
+end
+
+#llamado de prueba
+photos_count(request('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=10&api_key=', 'fmU7e9xWOdVaJsBJVZjWtjOkcm6Sbw9id6e8feLi'))
+
 #llamado de prueba
 buid_web_page(request('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=10&api_key=', 'fmU7e9xWOdVaJsBJVZjWtjOkcm6Sbw9id6e8feLi'))
