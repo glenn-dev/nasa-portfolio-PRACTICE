@@ -47,6 +47,7 @@ def buid_web_page (respuesta)           #metodo que toma la respuesta del metoso
 end
 
 
+
 #llamado de prueba
 #buid_web_page(request('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=10&api_key=', 'fmU7e9xWOdVaJsBJVZjWtjOkcm6Sbw9id6e8feLi'))
 
