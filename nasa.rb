@@ -3,8 +3,9 @@ require 'net/http'
 require 'json'
 require_relative 'lib/helpers'
 
-def request(url, api_key)               #Metodo request.
-    url = URI(url + api_key)
+#Metodo request.
+def request(url, api_key)
+    url = URI(url + '&api_key=' + api_key)
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -13,16 +14,26 @@ def request(url, api_key)               #Metodo request.
     JSON.parse(response.read_body)
 end
 
-def buid_web_page (respuesta)           #metodo que toma la respuesta del metoso 'request' y construye un documento html.
+#Metodo que toma la respuesta del metodo request, 'limpia' la data y construye un documento html.
+def buid_web_page (respuesta)
 
-                                        #Limpiando la data...
     clean_data = respuesta['photos']    #Arreglo que almacena elementos (tipo hash) contenidos dentro del hash principal.
     photo_info = {}                     #Hash que almacena cada elemento dentro del arreglo 'clean_data'.
     photo_src = []                      #Arreglo que almacena las url de las fotos provistas por la key 'img_src' dentro del hash 'photo_info'.
-    
+    info_camera = []
+
     clean_data.each do |i|              #Recorre el contenido para obtener la url de cada foto.
         photo_info = i
         photo_src.push(photo_info['img_src']) #Crea un arreglo con las url de cada foto.
+        info_camera.push(photo_info['camera']) #Crea un arreglo con los elementos del hash 'camera'.
+    end
+
+    acum = Hash.new(0)                  #acumulador de elementos del hash 'camera'.
+    info_camera.each do |v|
+        acum[v] += 1
+    end
+    acum.each do |k, v|
+        puts "Hay #{v} fotos de la camara #{k['name']}"
     end
     
     File.open('index.html', 'w') do |f| #Construye el documento html.
@@ -43,25 +54,6 @@ def buid_web_page (respuesta)           #metodo que toma la respuesta del metoso
     end
 end
 
-def photos_count (hash_res)             #metodo que cuenta las fotos de cada camara.
-    info = {}                           #
-    info_camera = []
-    hash_res['photos'].each do |i|
-        info = i
-        info_camera.push(info['camera'])
-    end
-    
-    acum = Hash.new(0)
-    info_camera.each do |v|
-        acum[v] += 1
-    end
-    acum.each do |k, v|
-        puts "Hay #{v} fotos de la camara #{k['name']}"
-    end
-end
 
 #llamado de prueba
-photos_count(request('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=10&api_key=', 'fmU7e9xWOdVaJsBJVZjWtjOkcm6Sbw9id6e8feLi'))
-
-#llamado de prueba
-buid_web_page(request('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=10&api_key=', 'fmU7e9xWOdVaJsBJVZjWtjOkcm6Sbw9id6e8feLi'))
+buid_web_page(request('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=10', 'fmU7e9xWOdVaJsBJVZjWtjOkcm6Sbw9id6e8feLi'))
