@@ -14,12 +14,12 @@ def request(url, api_key)
     JSON.parse(response.read_body)
 end
 
-# Metodo que recive la respuesta del request, "limpia" la data y construye un documento html.
+# Metodo que recibe la respuesta del request, "limpia" la data y construye un documento html.
 def buid_web_page (respuesta)
 
     clean_data = respuesta['photos']    # Arreglo que almacena elementos (tipo hash) contenidos dentro del hash principal.
     photo_info = {}                     # Hash que almacena cada elemento dentro del arreglo 'clean_data'.
-    photo_src = []                      # Arreglo que almacena las url de las fotos provistas por la key 'img_src' dentro del hash 'photo_info'.
+    photo_src = []                      # Arreglo que almacena las url de las fotos obtenidas por la key 'img_src' dentro del hash 'photo_info'.
     
     clean_data.each do |i|              # Recorre el contenido para obtener la url de cada foto.
         photo_info = i
@@ -64,7 +64,7 @@ def photos_count (hash_res)
 end
 
 #llamado de prueba
-#photos_count(request('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=10', 'fmU7e9xWOdVaJsBJVZjWtjOkcm6Sbw9id6e8feLi'))
+photos_count(request('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=10', 'fmU7e9xWOdVaJsBJVZjWtjOkcm6Sbw9id6e8feLi'))
 
 #llamado de prueba
-#buid_web_page(request('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=10', 'fmU7e9xWOdVaJsBJVZjWtjOkcm6Sbw9id6e8feLi'))
+buid_web_page(request('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=10', 'fmU7e9xWOdVaJsBJVZjWtjOkcm6Sbw9id6e8feLi'))
